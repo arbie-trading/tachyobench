@@ -17,7 +17,7 @@ macro_rules! bench {
                 const GRAPH_COUNT: usize = 61;
                 const NODES_PER_GRAPHS: usize = 13;
                 let results =
-                    [1, 3, 7, 17, 41, 101, 241]
+                    [101, 241]
                         .into_iter()
                         .map(move |visitor_count: usize| {
                             let total_messages =
