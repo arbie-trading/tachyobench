@@ -23,3 +23,9 @@ smolscale = { version = "0.3", optional = true }
 tachyonix = { version = "0.2" }
 thingbuf = "0.1"
 tokio = { version = "1", features = [ "sync", "rt-multi-thread" ] }
+ringbuf = "0.3"
+async-broadcast = "0.6"
+multiqueue2 = "0.1"
+ring-channel = "0.12"
+async-ringbuf = "0.2.0-rc.4"
+kanal = "0.1.0-pre8"

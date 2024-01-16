@@ -203,3 +203,102 @@ pub mod tokio_mpsc {
         (Sender { inner: s }, Receiver { inner: r })
     }
 }
+
+
+pub mod tokio_broadcast {
+    use ::tokio::sync::broadcast as channel;
+
+    use std::fmt::Debug;
+
+    #[derive(Clone)]
+    pub struct Sender<T> {
+        inner: channel::Sender<T>,
+    }
+    impl<T: Debug> Sender<T> {
+        pub async fn send(&mut self, message: T) {
+            self.inner.send(message).unwrap();
+        }
+    }
+
+    pub struct Receiver<T: Clone> {
+        inner: channel::Receiver<T>,
+    }
+    impl<T: Clone> Receiver<T> {
+        pub async fn recv(&mut self) -> Option<T> {
+            self.inner.recv().await.ok()
+        }
+    }
+
+    pub fn channel<T: Clone>(capacity: usize) -> (Sender<T>, Receiver<T>) {
+        let (s, r) = channel::channel(capacity);
+        (Sender { inner: s }, Receiver { inner: r })
+    }
+}
+
+pub mod async_ringbuf {
+    use std::{mem::MaybeUninit, sync::Arc};
+
+    use async_ringbuf::AsyncRb;
+    use async_ringbuf::traits::AsyncProducer;
+    use async_ringbuf::traits::AsyncConsumer;
+    use async_ringbuf::traits::Split;
+
+    pub struct Sender<T> {
+        inner: async_ringbuf::wrap::AsyncWrap<
+            Arc<AsyncRb<Vec<MaybeUninit<T>>>>,
+            true,
+            false,
+        >
+    }
+    impl<T: std::fmt::Debug> Sender<T> {
+        pub async fn send(&mut self, message: T) {
+            self.inner.push(message).await.unwrap();
+        }
+    }
+
+    pub struct Receiver<T> {
+        inner: async_ringbuf::wrap::AsyncWrap<
+            Arc<AsyncRb<Vec<MaybeUninit<T>>>>,
+            false,
+            true,
+        >,
+    }
+    impl<T> Receiver<T> {
+        pub async fn recv(&mut self) -> Option<T> {
+            self.inner.pop().await
+        }
+    }
+
+    pub fn channel<T>(capacity: usize) -> (Sender<T>, Receiver<T>) {
+        let rb = async_ringbuf::AsyncHeapRb::<T>::new(capacity);
+        let (prod, cons) = rb.split();
+        (Sender { inner: prod }, Receiver { inner: cons })
+    }
+}
+
+pub mod kanal {
+
+    #[derive(Clone)]
+    pub struct Sender<T> {
+        inner: kanal::AsyncSender<T>,
+    }
+    impl<T> Sender<T> {
+        pub async fn send(&mut self, message: T) {
+            self.inner.send(message).await.unwrap();
+        }
+    }
+
+    pub struct Receiver<T> {
+        inner: kanal::AsyncReceiver<T>,
+    }
+    impl<T> Receiver<T> {
+        pub async fn recv(&mut self) -> Option<T> {
+            self.inner.recv().await.ok()
+        }
+    }
+
+    pub fn channel<T>(capacity: usize) -> (Sender<T>, Receiver<T>) {
+        let (s, r) = kanal::bounded_async(capacity);
+        (Sender { inner: s }, Receiver { inner: r })
+    }
+}
