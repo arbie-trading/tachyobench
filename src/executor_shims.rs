@@ -27,6 +27,8 @@ impl Executor for TokioExecutor {
 impl Default for TokioExecutor {
     fn default() -> Self {
         let runtime = ::tokio::runtime::Builder::new_multi_thread()
+            .max_blocking_threads(8)
+            .worker_threads(4)
             .build()
             .unwrap();
 

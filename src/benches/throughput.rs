@@ -14,7 +14,7 @@ macro_rules! bench {
                 let total_messages =
                     MESSAGES_PER_CHANNEL * CHANNELS;
 
-                let results = [1, 10, 100, 1000, 10000]
+                let results = [10_000, 100_000]
                     .into_iter()
                     .map(move |capacity: usize| {
                         let throughput: Vec<_> = (0..samples.get())
