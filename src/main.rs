@@ -72,7 +72,7 @@ const BENCHES: &[(&str, &str, &[(ExecutorId, fn(NonZeroU32) -> BenchIterator)])]
     // add_test!(funnel, postage_mpsc),
     add_test!(funnel, tokio_mpsc),
     add_test!(funnel, kanal),
-    add_test!(funnel, tokio_broadcast),
+    // add_test!(funnel, tokio_broadcast),
     add_test!(pinball, async_channel),
     add_test!(pinball, flume),
     add_test!(pinball, futures_mpsc),
@@ -81,7 +81,7 @@ const BENCHES: &[(&str, &str, &[(ExecutorId, fn(NonZeroU32) -> BenchIterator)])]
     // add_test!(pinball, postage_mpsc),
     add_test!(pinball, tokio_mpsc),
     add_test!(pinball, kanal),
-    add_test!(pinball, tokio_broadcast),
+    // add_test!(pinball, tokio_broadcast),
     add_test!(throughput, async_channel),
     add_test!(throughput, flume),
     add_test!(throughput, futures_mpsc),
@@ -90,7 +90,7 @@ const BENCHES: &[(&str, &str, &[(ExecutorId, fn(NonZeroU32) -> BenchIterator)])]
     // add_test!(throughput, postage_mpsc),
     add_test!(throughput, tokio_mpsc),
     add_test!(throughput, kanal),
-    add_test!(throughput, tokio_broadcast),
+    // add_test!(throughput, tokio_broadcast),
     add_test!(throughput, async_ringbuf),
 ];
 
